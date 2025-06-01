@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout - Urban Fitters</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f6f3; padding: 2rem; }
+    .checkout-container { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.10); padding: 2rem; }
+    h1 { margin-top: 0; }
+    label { display: block; margin: 1rem 0 0.5rem 0; }
+    input, textarea { width: 100%; padding: 0.5rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 6px; }
+    .order-summary { background: #f3f1ed; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+    .checkout-btn { background: #222; color: #fff; border: none; padding: 0.7rem 2rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer; width: 100%; }
+    .checkout-btn:hover { background: #ff6f61; }
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <h1>Checkout</h1>
+    <div class="order-summary" id="order-summary"></div>
+    <form id="checkout-form">
+      <label>Name:<input type="text" name="name" required /></label>
+      <label>Address:<textarea name="address" required></textarea></label>
+      <label>Email:<input type="email" name="email" required /></label>
+      <button class="checkout-btn" type="submit">Place Order</button>
+    </form>
+  </div>
+  <script>
+    // Get cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+    const products = [
+      { id: 1, name: "100% LINEN SHIRT WITH CROSSOVER COLLAR", price: 6590 },
+      { id: 2, name: "CROSS-STRAP FLAT LEATHER SANDALS", price: 3790 },
+      { id: 3, name: "OVERSIZE BLAZER", price: 7990 },
+      { id: 4, name: "ASYMMETRIC MIDI DRESS WITH APPLIQUÉ", price: 4990 },
+      { id: 5, name: "SEQUIN MINI SKIRT", price: 3990 },
+      { id: 6, name: "ASYMMETRIC PLEATED T-SHIRT", price: 1290 },
+      { id: 7, name: "SANDALS WITH METAL DETAIL", price: 4590 }
+    ];
+    // Build summary
+    let sum = 0;
+    let summary = "<strong>Your Order:</strong><ul>";
+    Object.keys(cart).forEach(id => {
+      const prod = products.find(p => p.id == id);
+      summary += `<li>${prod.name} x${cart[id]} = ${(prod.price * cart[id]).toLocaleString()} ALL</li>`;
+      sum += prod.price * cart[id];
+    });
+    summary += `</ul><strong>Total: ${sum.toLocaleString()} ALL</strong>`;
+    document.getElementById('order-summary').innerHTML = summary;
+
+    // Simple form handler
+    document.getElementById('checkout-form').onsubmit = function(e) {
+      e.preventDefault();
+      alert("Order placed! (Simulated)");
+      localStorage.removeItem('cart');
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
