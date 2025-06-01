@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boutique Urban Fitters Shop</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8f6f3;
+      display: flex;
+    }
+    header {
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+    .main {
+      margin-top: 5rem;
+      margin-right: 320px;
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      transition: transform 0.15s;
+    }
+    .product-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    }
+    .product-card img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    .product-card h3 {
+      margin: 0.5rem 0 0.2rem 0;
+      font-size: 1.1rem;
+    }
+    .product-card p {
+      margin: 0.2rem 0 0.7rem 0;
+      color: #666;
+      font-size: 0.95rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .product-card button {
+      background: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1.3rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.17s;
+    }
+    .product-card button:hover {
+      background: #ff3b2e;
+    }
+    .cart-sidebar {
+      width: 320px;
+      background: #fff;
+      border-left: 1px solid #eee;
+      box-shadow: -4px 0 16px rgba(0,0,0,0.07);
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100vh;
+      padding: 2rem 1.5rem;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .cart-sidebar h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.3rem;
+    }
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .cart-item span {
+      font-size: 1rem;
+    }
+    .cart-total {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      color: #222;
+      text-align: right;
+    }
+    .checkout-btn {
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 0;
+      width: 100%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.18s;
+    }
+    .checkout-btn:hover {
+      background: #ff6f61;
+    }
+    @media (max-width: 900px) {
+      .cart-sidebar {
+        width: 100vw;
+        height: 300px;
+        position: static;
+        box-shadow: none;
+        border-left: none;
+        border-top: 2px solid #eee;
+        flex-direction: row;
+        gap: 0.5rem;
+      }
+      .main {
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Urban Fitters Boutique</header>
+  <div class="main" id="product-list"></div>
+  <aside class="cart-sidebar">
+    <h2>Your Cart</h2>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-total" id="cart-total"></div>
+    <button class="checkout-btn" onclick="goToCheckout()">Checkout</button>
+  </aside>
+  <script>
+    const products = [
+      {
+        id: 1,
+        name: "100% LINEN SHIRT WITH CROSSOVER COLLAR",
+        price: 6590,
+        img: "https://static.zara.net/assets/public/8ade/d204/0d6f47979397/239873ef7f2e/09056066712-p/09056066712-p.jpg?ts=1747654400448&w=1366",
+        desc: "Shirt made in 100% linen yarn. Crossover lapel collar and long sleeve finished in a cuff. Asymmetric hem. Front button fastening."
+      },
+      {
+        id: 2,
+        name: "CROSS-STRAP FLAT LEATHER SANDALS",
+        price: 3790,
+        img: "https://static.zara.net/assets/public/91e4/2ff1/5d6448348c07/465e31e7184a/08372049251-000-p/08372049251-000-p.jpg?ts=1740738266007&w=750",
+        desc: "Flat leather sandal shoes with a cross-strap detail on the front. Heel height: 0.9 cm / 0.3″."
+      },
+      {
+        id: 3,
+        name: "OVERSIZE BLAZER",
+        price: 7990,
+        img: "https://static.zara.net/assets/public/d68b/3e07/dcb74eeabae5/ba97b4235c65/05247764622-p/05247764622-p.jpg?ts=1742126774437&w=1366",
+        desc: "Oversize blazer with a lapel collar. Long sleeves with shoulder pads. Front pockets and a mock welt pocket on the chest. Lined. Front button fastening."
+      },
+      {
+        id: 4,
+        name: "ASYMMETRIC MIDI DRESS WITH APPLIQUÉ",
+        price: 4990,
+        img: "https://static.zara.net/assets/public/f736/9d4d/95fa4f58956d/42243f86580b/08037392402-p/08037392402-p.jpg?ts=1748603511686&w=750",
+        desc: "Dress with a boat neck and sleeveless design with a twisted shoulder. Features a gold appliqué detail on the waist. Inner lining. Hem with a vent at the back."
+      },
+      {
+        id: 5,
+        name: "SEQUIN MINI SKIRT",
+        price: 3990,
+        img: "https://static.zara.net/assets/public/69b0/0cb8/9c644d78aa18/9afd83ed6cef/03920721080-e1/03920721080-e1.jpg?ts=1747306671321&w=750",
+        desc: "Short sequin skirt with lining. Featuring an invisible zip fastening in the side seam."
+      },
+      {
+        id: 6,
+        name: "ASYMMETRIC PLEATED T-SHIRT",
+        price: 1290,
+        img: "https://static.zara.net/assets/public/f931/93c4/56e043628774/af3960bce522/04424311300-p/04424311300-p.jpg?ts=1743523683393&w=750",
+        desc: "Sleeveless boat neck T-shirt with pleated side details and an asymmetric hem."
+      },
+      {
+        id: 7,
+        name: "SANDALS WITH METAL DETAIL",
+        price: 4590,
+        img: "https://static.zara.net/assets/public/de4f/63ff/4d9f409f857d/d0d5405ed856/12316510800-e1/12316510800-e1.jpg?ts=1738143318633&w=750",
+        desc: "Stiletto heel sandals. Straps with metal detail on the front. Mid stiletto heel. Round toe. Heel height: 7 cm. / 2.7″"
+      }
+    ];
+
+    // Initialize cart
+    let cart = {};
+
+    function renderProducts() {
+      const list = document.getElementById('product-list');
+      list.innerHTML = '';
+      products.forEach(prod => {
+        list.innerHTML += `
+          <div class="product-card">
+            <img src="${prod.img}" alt="${prod.name}">
+            <h3>${prod.name}</h3>
+            <div>${prod.price.toLocaleString()} ALL</div>
+            <p>${prod.desc}</p>
+            <button onclick="addToCart(${prod.id})">Add to Cart</button>
+          </div>
+        `;
+      });
+    }
+
+    function renderCart() {
+      const items = document.getElementById('cart-items');
+      const total = document.getElementById('cart-total');
+      items.innerHTML = '';
+      let sum = 0;
+      for (const id in cart) {
+        const prod = products.find(p => p.id == id);
+        const qty = cart[id];
+        sum += prod.price * qty;
+        items.innerHTML += `
+          <div class="cart-item">
+            <span>${prod.name} x${qty}</span>
+            <button onclick="removeFromCart(${id})" style="color: #ff3b2e; background: none; border: none; cursor: pointer;">&#10005;</button>
+          </div>
+        `;
+      }
+      total.textContent = sum > 0 ? `Total: ${sum.toLocaleString()} ALL` : "Your cart is empty.";
+    }
+
+    function addToCart(id) {
+      cart[id] = (cart[id] || 0) + 1;
+      renderCart();
+    }
+
+    function removeFromCart(id) {
+      if (cart[id]) {
+        cart[id]--;
+        if (cart[id] === 0) delete cart[id];
+      }
+      renderCart();
+    }
+
+    // New checkout logic: Save cart to localStorage and go to checkout.html
+    function goToCheckout() {
+      if (Object.keys(cart).length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      window.location.href = "checkout.html";
+    }
+
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
